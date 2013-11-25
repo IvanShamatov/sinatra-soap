@@ -4,7 +4,7 @@ require "sinatra/soap/version"
 
 module Sinatra
   module Soap
-    def soap_action(&block)
+    def soap_action(name, &block)
     	yield if block_given?
     end
   end
