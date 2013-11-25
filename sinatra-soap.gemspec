@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Sinatra::Soap::VERSION
   spec.authors       = ["Ivan Shamatov"]
   spec.email         = ["status.enable@gmail.com"]
-  spec.description   = %q{Handling SOAP requests for sinatra}
-  spec.summary       = %q{Handling SOAP requests for sinatra}
+  spec.description   = %q{Handling SOAP requests for sinatra inspired by washout}
+  spec.summary       = %q{Handling SOAP requests for sinatra inspired by washout}
   spec.homepage      = "https://github.com/IvanShamatov/sinatra-soap"
   spec.license       = "MIT"
 

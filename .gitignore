@@ -1,0 +1,7 @@
+.rbx/
+.bundle/
+*.gem
+.idea/
+.rvmrc
+*.swp*.gem
+Gemfile.lock
