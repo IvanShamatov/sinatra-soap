@@ -1,6 +1,5 @@
-# Sinatra::Soap
+# Sinatra::Soap — Under construction
 
-TODO: Write a gem description
 
 ## Installation
 

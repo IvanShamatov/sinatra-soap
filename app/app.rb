@@ -2,6 +2,8 @@ require 'sinatra'
 require 'sinatra/soap'
 
 
-soap_action "test" do
-  puts "1"
+parse_soap_action
+
+post '/' do
+	puts env.inspect
 end

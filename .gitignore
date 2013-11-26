@@ -5,3 +5,5 @@
 .rvmrc
 *.swp*.gem
 Gemfile.lock
+app/
+app/*

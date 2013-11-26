@@ -1,3 +1,2 @@
 gem "sinatra"
-gem "sinatra-soap", git: "https://github.com/IvanShamatov/sinatra-soap"
-
+gem "sinatra-soap", path: "/Users/shamatov/Projects/sinatra-soap"
