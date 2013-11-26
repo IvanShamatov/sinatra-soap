@@ -1,5 +1,6 @@
 # Sinatra::Soap — Under construction
 
+[![Build Status](https://travis-ci.org/IvanShamatov/sinatra-soap.png?branch=master)](https://travis-ci.org/IvanShamatov/sinatra-soap)
 
 ## Installation
 
