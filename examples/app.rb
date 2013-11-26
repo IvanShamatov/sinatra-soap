@@ -4,8 +4,8 @@ require 'sinatra/soap'
 class App < Sinatra::Base
   register Sinatra::Soap
   post '/' do
-    puts env['sinatra.soap_action']
-    puts env['sinatra.soap_body']
+    puts env['sinatra.soap_action'].inspect
+    puts env['sinatra.soap_body'].inspect
   end
 
   get '/' do

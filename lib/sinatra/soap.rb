@@ -6,10 +6,9 @@ require "nori"
 
 module Sinatra
   module Soap
-
+    include Helpers
     def self.registered(app)
       app.helpers Helpers
-      
       app.set :soap_path, '/action' unless defined?(app.settings.soap_path)
       app.set :wsdl_path, '/wsdl' unless defined?(app.settings.wsdl_path)
 
