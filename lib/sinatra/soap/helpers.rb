@@ -1,41 +1,41 @@
 module Sinatra
   module Soap
     module Helpers
-      
-      def soap(name, pars, &block)
+
+      def soap(name, *args, &block)
         # soap :LogEvent, 
         #      args: {},
         #      return: {},
         #      namespace: "",
         #      to: method_name do
         # end
-        # wsdl.actions[name]["params"] = pars
-        # wsdl.actions[name]["block"] = block if block_given?
-        raise "Not implemented"
+        wsdl = Soap::Wsdl
+        wsdl.actions[name] = {}
+        args.pop.each do |key, value|
+          wsdl.actions[name][key] = value
+        end
+        wsdl.actions[name][:block] = block if block_given?
       end
+      module_function :soap
 
       def generate_wsdl
-        raise "Not implemented"
+        Soap::Wsdl.generate_wsdl
       end
 
       def parse_soap
-        #TODO: move it to params 
-        # so it can be used like: params[:action]
-        #                         params[:body]
-        [soap_action, soap_body]
+        action = soap_action
+        raise SoapFault unless Soap::Wsdl.actions.include?(action)
+        body = soap_body[:Envelope][:Body]
       end
 
       def soap_action
-        return env['sinatra.soap_action'] if env['sinatra.soap_action']
-        soap_action = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1')
-        env['sinatra.soap_action'] = soap_action
+        env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
       end
 
       def soap_body
-        return env['sinatra.soap_body'] if env['sinatra.soap_body']
         rack_input = env["rack.input"].read
         env["rack.input"].rewind
-        env['sinatra.soap_body'] = nori.parse(rack_input)
+        nori.parse(rack_input)
       end
 
       def nori(snakecase=false)
