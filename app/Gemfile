@@ -1,2 +1,0 @@
-gem "sinatra"
-gem "sinatra-soap", path: "/Users/shamatov/Projects/sinatra-soap"

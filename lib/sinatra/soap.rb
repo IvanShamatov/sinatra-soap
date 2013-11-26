@@ -6,23 +6,25 @@ require "nori"
 module Sinatra
   module Soap
 
-    def parse_soap_action
+    def parse_soap
       before do
-        return env['sinatra.soap_action'] if env['sinatra.soap_action']
-        soap_action = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1')
-        puts soap_action.inspect
-        env['sinatra.soap_action'] = soap_action
+        soap_action
+        soap_body
       end
     end
 
     module Helpers
-      def parse_soap_action
-        before do
-          return env['sinatra.soap_action'] if env['sinatra.soap_action']
-          soap_action = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1')
-          puts soap_action.inspect
-          env['sinatra.soap_action'] = soap_action
-        end
+      def soap_action
+        return env['sinatra.soap_action'] if env['sinatra.soap_action']
+        soap_action = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1')
+        env['sinatra.soap_action'] = soap_action
+      end
+
+      def soap_body
+        return env['sinatra.soap_body'] if env['sinatra.soap_body']
+        rack_input = env["rack.input"].read
+        env["rack.input"].rewind
+        env['sinatra.soap_body'] = nori.parse(rack_input)
       end
 
       def nori(snakecase=false)
@@ -37,12 +39,10 @@ module Sinatra
       end
     end
 
-
     def self.registered(app)
       app.helpers Helpers
-      app.parse_soap_action
+      app.parse_soap
     end
   end
-  Delegator.delegate :parse_soap_action
   register Soap
 end
