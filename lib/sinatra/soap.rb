@@ -1,16 +1,35 @@
-require 'sinatra/base'
+require "sinatra/base"
 require "sinatra/soap/version"
 require "nori"
 
 
 module Sinatra
   module Soap
+    attr_accessor :soap_actions, :wsdl 
 
     def parse_soap
       before do
-        soap_action
-        soap_body
+         #TODO: move it to params 
+         # so it can be used like: params[:action]
+         #                         params[:body]
+        [soap_action, soap_body]
       end
+    end
+
+    def soap(name, params, &block)
+      # soap :LogEvent, 
+      #      args: {},
+      #      return: {},
+      #      namespace: "",
+      #      to: method_name do
+      # end
+      wsdl.actions[name]["params"] = params
+      wsdl.actions[name]["block"] = block if block_given?
+      raise "Not implemented"
+    end
+
+    def generate_wsdl
+      raise "Not implemented"
     end
 
     module Helpers
@@ -40,9 +59,19 @@ module Sinatra
     end
 
     def self.registered(app)
-      app.helpers Helpers
-      app.parse_soap
+      app.set :soap_path, '/action'
+      app.set :wsdl_path, '/wsdl'
+
+      app.post(settings.soap_path) do
+        action, pars = app.parse_soap
+        #WSDL['wsdl'][action]["block"].call(pars)
+      end
+
+      app.post(settings.wsdl_path) do 
+        app.generate_wsdl
+      end
     end
   end
   register Soap
+  Delegator.delegate :soap
 end
