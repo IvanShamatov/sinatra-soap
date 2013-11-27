@@ -13,7 +13,7 @@ module Sinatra
     #      namespace: "",
     #      to: method_name do
     # end
-    def soap(name, *args, &block)
+    def soap(name, *args=nil, &block)
       Soap::Wsdl.instance.register_action(name, *args, &block)
     end
 

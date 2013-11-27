@@ -12,14 +12,14 @@ module Sinatra
       end
 
       def generate
-        raise "Not implemented"
+        # raise "Not implemented"
       end
 
       def [](key)
         actions[key]
       end
 
-      def register_action(name, *args, &block)
+      def register_action(name, *args=nil, &block)
         actions[name] = {}
         args = args.pop
         unless args.nil?
