@@ -16,14 +16,48 @@ Or install it yourself as:
 
     $ gem install sinatra-soap
 
+## Overview
+
+In case of simplicity and quick first working release:
+ 
+ - WSDL would not be generated
+ - WSDL would not be checked
+ - Response would be ```"#{soap_action}Response"``` and types would guessed.
+
+
 ## Usage
 
-TODO: Write usage instructions here
+A classic application would work like that: 
 
-## Contributing
+    require 'sinatra'
+    require 'sinatra/soap'
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+    set :wsdl_path, "/path/to/file"
+
+    soap "SomeAction" do 
+      params # hash to be returned
+    end
+
+A modular application would look like that:
+    
+    require 'sinatra/base'
+    require 'sinatra/soap'
+
+    class SoapAPI < Sinatra::Base
+
+      #remember to register extenstion if you are using modular style
+      register Sinatra::Soap 
+
+      set :wsdl_path, "/path/to/file"
+
+      soap "SomeAction" do 
+        params # hash to be returned
+      end
+    end
+
+
+
+
+
+
+

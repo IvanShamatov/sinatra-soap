@@ -1,30 +1,16 @@
+require "nori"
+
 module Sinatra
   module Soap
     module Helpers
 
-      def soap(name, *args, &block)
-        # soap :LogEvent, 
-        #      args: {},
-        #      return: {},
-        #      namespace: "",
-        #      to: method_name do
-        # end
-        wsdl = Soap::Wsdl
-        wsdl.actions[name] = {}
-        args.pop.each do |key, value|
-          wsdl.actions[name][key] = value
-        end
-        wsdl.actions[name][:block] = block if block_given?
-      end
-      module_function :soap
-
       def generate_wsdl
-        Soap::Wsdl.generate_wsdl
+        wsdl.generate_wsdl
       end
 
       def parse_soap
         action = soap_action
-        raise SoapFault unless Soap::Wsdl.actions.include?(action)
+        raise "Undefined Soap Action" unless wsdl.actions.include?(action)
         body = soap_body[:Envelope][:Body]
       end
 
@@ -36,6 +22,10 @@ module Sinatra
         rack_input = env["rack.input"].read
         env["rack.input"].rewind
         nori.parse(rack_input)
+      end
+
+      def wsdl
+        Soap::Wsdl
       end
 
       def nori(snakecase=false)
