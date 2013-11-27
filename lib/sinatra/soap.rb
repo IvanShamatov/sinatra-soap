@@ -23,8 +23,7 @@ module Sinatra
       app.set :wsdl_path, '/wsdl' unless defined?(app.settings.wsdl_path)
 
       app.post(app.settings.soap_path) do
-        action, body = parse_soap
-        response = call_block_for(action, body)
+        response = call_action_block
         if response.is_a? Hash 
           # build XML Response according to wsdl
           # https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L697

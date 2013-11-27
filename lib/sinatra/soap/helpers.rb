@@ -4,25 +4,25 @@ module Sinatra
   module Soap
     module Helpers
 
-      def call_block_for(action, body)
-        wsdl[action][:block].call(body)
+      def call_action_block
+        parse_request
+        wsdl[params[:action]][:block].call(params[:soap])
       end
 
-      def parse_soap
+      def parse_request
         action = soap_action
+        soap_params
         raise "Undefined Soap Action" unless wsdl.actions.include?(action)
-        body = soap_params[:Envelope][:Body]
-        [action.to_sym, body]
       end
 
       def soap_action
-        env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
+        params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
       end
 
       def soap_params 
         rack_input = env["rack.input"].read
         env["rack.input"].rewind
-        nori.parse(rack_input)
+        params[:soap] = nori.parse(rack_input)[:Envelope][:Body]
       end
 
       def wsdl

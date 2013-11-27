@@ -19,8 +19,6 @@ A classic application would work like that:
 require 'sinatra'
 require 'sinatra/soap'
 
-set :wsdl_path, "/path/to/file"
-
 soap "SomeAction" do |params|
   do_something_with_params # hash to be returned
 end
@@ -37,9 +35,7 @@ class SoapAPI < Sinatra::Base
   #remember to register extenstion if you are using modular style
   register Sinatra::Soap 
 
-  set :wsdl_path, "/path/to/file"
-
-  soap "SomeAction" do 
+  soap "SomeAction" do |params|
     params # hash to be returned
   end
 end
