@@ -19,7 +19,7 @@ module Sinatra
         actions[key]
       end
 
-      def register_action(name, *args=nil, &block)
+      def register_action(name, *args, &block)
         actions[name] = {}
         args = args.pop
         unless args.nil?
