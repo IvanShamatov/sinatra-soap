@@ -24,7 +24,13 @@ module Sinatra
 
       app.post(app.settings.soap_path) do
         action, body = parse_soap
-        call_block_for(action)
+        response = call_block_for(action, body)
+        if response.is_a? Hash 
+          # build XML Response according to wsdl
+          # https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L697
+        else
+          nil
+        end
       end
 
       app.get(app.settings.wsdl_path) do 

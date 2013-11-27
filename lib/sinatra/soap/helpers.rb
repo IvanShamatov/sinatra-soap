@@ -4,13 +4,13 @@ module Sinatra
   module Soap
     module Helpers
 
-      def call_block_for(action)
-        wsdl[action][:block].call
+      def call_block_for(action, body)
+        wsdl[action][:block].call(body)
       end
 
       def parse_soap
         action = soap_action
-        # raise "Undefined Soap Action" unless wsdl.actions.include?(action)
+        raise "Undefined Soap Action" unless wsdl.actions.include?(action)
         body = soap_params[:Envelope][:Body]
         [action.to_sym, body]
       end

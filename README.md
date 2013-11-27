@@ -21,8 +21,8 @@ require 'sinatra/soap'
 
 set :wsdl_path, "/path/to/file"
 
-soap "SomeAction" do 
-  params # hash to be returned
+soap "SomeAction" do |params|
+  do_something_with_params # hash to be returned
 end
 ```
 
