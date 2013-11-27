@@ -29,32 +29,35 @@ In case of simplicity and quick first working release:
 
 A classic application would work like that: 
 
-    require 'sinatra'
-    require 'sinatra/soap'
+```ruby
+require 'sinatra'
+require 'sinatra/soap'
 
-    set :wsdl_path, "/path/to/file"
+set :wsdl_path, "/path/to/file"
 
-    soap "SomeAction" do 
-      params # hash to be returned
-    end
+soap "SomeAction" do 
+  params # hash to be returned
+end
+```
 
 A modular application would look like that:
-    
-    require 'sinatra/base'
-    require 'sinatra/soap'
 
-    class SoapAPI < Sinatra::Base
+```ruby
+require 'sinatra/base'
+require 'sinatra/soap'
 
-      #remember to register extenstion if you are using modular style
-      register Sinatra::Soap 
+class SoapAPI < Sinatra::Base
 
-      set :wsdl_path, "/path/to/file"
+  #remember to register extenstion if you are using modular style
+  register Sinatra::Soap 
 
-      soap "SomeAction" do 
-        params # hash to be returned
-      end
-    end
+  set :wsdl_path, "/path/to/file"
 
+  soap "SomeAction" do 
+    params # hash to be returned
+  end
+end
+```
 
 
 
