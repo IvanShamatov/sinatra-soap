@@ -3,10 +3,12 @@ require 'sinatra/soap'
 
 class App < Sinatra::Base
   register Sinatra::Soap
-  soap :test, in: {reader: :integer},
-              out: nil,
-              namespace: "anyother" do
-    puts "1"
+  soap :test do
+    puts soap_params.inspect
+  end
+
+  get '/' do
+    puts params.inspect
   end
 end
 App.run!

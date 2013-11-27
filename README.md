@@ -1,20 +1,6 @@
 # Sinatra::Soap — Under construction
 
-[![Build Status](https://travis-ci.org/IvanShamatov/sinatra-soap.png?branch=master)](https://travis-ci.org/IvanShamatov/sinatra-soap)[![Code Climate](https://codeclimate.com/github/IvanShamatov/sinatra-soap.png)](https://codeclimate.com/github/IvanShamatov/sinatra-soap)
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'sinatra-soap'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install sinatra-soap
+[![Build Status](https://travis-ci.org/IvanShamatov/sinatra-soap.png?branch=master)](https://travis-ci.org/IvanShamatov/sinatra-soap) [![Code Climate](https://codeclimate.com/github/IvanShamatov/sinatra-soap.png)](https://codeclimate.com/github/IvanShamatov/sinatra-soap) [![Gem Version](https://badge.fury.io/rb/sinatra-soap.png)](http://badge.fury.io/rb/sinatra-soap)
 
 ## Overview
 

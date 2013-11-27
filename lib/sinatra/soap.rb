@@ -6,37 +6,29 @@ require "sinatra/soap/wsdl"
 
 module Sinatra
   module Soap
-    def soap(name, *args, &block)
-      # soap :LogEvent, 
-      #      args: {},
-      #      return: {},
-      #      namespace: "",
-      #      to: method_name do
-      # end
-      wsdl.actions[name] = {}
-      args.pop.each do |key, value|
-        wsdl.actions[name][key] = value
-      end
-      wsdl.actions[name][:block] = block if block_given?
-    end
 
+    # soap :LogEvent, 
+    #      args: {},
+    #      return: {},
+    #      namespace: "",
+    #      to: method_name do
+    # end
+    def soap(name, *args, &block)
+      Soap::Wsdl.instance.register_action(name, *args, &block)
+    end
 
     def self.registered(app)
       app.helpers Helpers
       app.set :soap_path, '/action' unless defined?(app.settings.soap_path)
-      app.set :wsdl_url, '/wsdl' unless defined?(app.settings.wsdl_path)
+      app.set :wsdl_path, '/wsdl' unless defined?(app.settings.wsdl_path)
 
       app.post(app.settings.soap_path) do
-        action, app.params = parse_soap
-        if block = Wsdl.actions[action][:block]
-          block.call(params)
-        else
-          send(Wsdl.actions[action][:to], params)
-        end
+        action, body = parse_soap
+        call_block_for(action)
       end
 
       app.get(app.settings.wsdl_path) do 
-        generate_wsdl
+        wsdl.generate
       end
     end
   end
