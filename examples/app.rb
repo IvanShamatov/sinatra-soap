@@ -13,4 +13,4 @@ class App < Sinatra::Base
     puts params.inspect
   end
 end
-puts App.wsdl
+puts App.run!
