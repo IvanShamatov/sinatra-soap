@@ -12,14 +12,16 @@ module Sinatra
       def parse_request
         action = soap_action
         soap_params
-        raise "Undefined Soap Action" unless wsdl.actions.include?(action)
+        raise Soap::SoapFault, "Undefined Soap Action" unless wsdl.actions.include?(action)
       end
 
       def soap_action
+        return params[:action] unless params[:action].nil?
         params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
       end
 
       def soap_params 
+        return params[:soap] unless params[:soap].nil?
         rack_input = env["rack.input"].read
         env["rack.input"].rewind
         params[:soap] = nori.parse(rack_input)[:Envelope][:Body]

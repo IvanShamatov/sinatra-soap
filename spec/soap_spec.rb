@@ -23,18 +23,43 @@ describe 'A default soap sinatra application' do
   end
   
 
-  it "should parse soap request" do
+  it "should parse soap request and send response" do
     headers = {"HTTP_SOAPACTION" => 'test'}
     message = '<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="any" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Body><wsdl:test><par>one</par><par2>bar</par2><foo>wat</foo></wsdl:test></env:Body></env:Envelope>'
     post '/action', message, headers
-    last_response.body.should == {:par=>"one", :par2=>"bar", :foo=>"wat"}.to_s
+    response =<<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">
+  <soap:Body>
+    <soap:testResponse>
+      <par>one</par>
+      <par2>bar</par2>
+      <foo>wat</foo>
+    </soap:testResponse>
+  </soap:Body>
+</soap:Envelope>
+    XML
+    last_response.body.should == response
   end
 
-  it "should register soap actions and save it to wsdl.actions" do
-    pending
-    #app.wsdl.actions.should include(:test)
-  end
 
+  it "should raise soap fault on unknown action" do
+    headers = {"HTTP_SOAPACTION" => 'test2'}
+    message = '<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="any" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Body><wsdl:test><par>one</par><par2>bar</par2><foo>wat</foo></wsdl:test></env:Body></env:Envelope>'
+    post '/action', message, headers
+    response =<<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soap:Body>
+    <soap:Fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <faultcode>Client</faultcode>
+      <faultstring>Undefined Soap Action</faultstring>
+    </soap:Fault>
+  </soap:Body>
+</soap:Envelope>
+    XML
+    last_response.body.should == response
+  end
 
   it "should have endpoint for soap actions" do
     endpoint = app.routes["POST"].select {|k| k[0].to_s.match('action')}.count
