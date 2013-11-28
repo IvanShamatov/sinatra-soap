@@ -6,7 +6,7 @@ module Sinatra
 
       def call_action_block
         parse_request
-        wsdl[params[:action]][:block].call(params[:soap])
+        wsdl[params[:action]][:block].call(params[:soap][params[:action]])
       end
 
       def parse_request

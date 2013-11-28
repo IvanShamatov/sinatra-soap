@@ -6,6 +6,7 @@ require 'rack/test'
 class SoapApp < Sinatra::Base
   register Sinatra::Soap
   soap :test do |params|
+    params
   end
 end
 
@@ -23,14 +24,15 @@ describe 'A default soap sinatra application' do
   
 
   it "should parse soap request" do
-    post '/action', '<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="any" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Body><wsdl:test><par>one</par><par2>bar</par2><foo>wat</foo></wsdl:test></env:Body></env:Envelope>'
-    app.params.should include(:soap)
-    app.params[:soap].should == :test
-    app.params[:action].should == {something: "sometimes"}
+    headers = {"HTTP_SOAPACTION" => 'test'}
+    message = '<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="any" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Body><wsdl:test><par>one</par><par2>bar</par2><foo>wat</foo></wsdl:test></env:Body></env:Envelope>'
+    post '/action', message, headers
+    last_response.body.should == {:par=>"one", :par2=>"bar", :foo=>"wat"}.to_s
   end
 
-  it "should register soap actions" do
-    
+  it "should register soap actions and save it to wsdl.actions" do
+    pending
+    #app.wsdl.actions.should include(:test)
   end
 
 

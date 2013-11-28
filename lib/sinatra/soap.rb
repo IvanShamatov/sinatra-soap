@@ -18,13 +18,14 @@ module Sinatra
     end
 
     def self.registered(app)
-      app.helpers Helpers
+      app.helpers Sinatra::Soap::Helpers
       app.set :soap_path, '/action' unless defined?(app.settings.soap_path)
       app.set :wsdl_path, '/wsdl' unless defined?(app.settings.wsdl_path)
 
       app.post(app.settings.soap_path) do
         response = call_action_block
         if response.is_a? Hash 
+          response.inspect
           # build XML Response according to wsdl
           # https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L697
         else
