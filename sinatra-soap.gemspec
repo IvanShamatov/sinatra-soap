@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Sinatra::Soap::VERSION
   spec.authors       = ["Ivan Shamatov"]
   spec.email         = ["status.enable@gmail.com"]
-  spec.description   = %q{Handling SOAP requests for sinatra inspired by washout}
+  spec.description   = %q{Sinatra-soap gem makes task to create SOAP API really simple. Inspired by WashOut gem for Rails. But remember, the only reason why you should use SOAP is legacy code.}
   spec.summary       = %q{Handling SOAP requests for sinatra inspired by washout}
   spec.homepage      = "https://github.com/IvanShamatov/sinatra-soap"
   spec.license       = "MIT"
@@ -22,9 +22,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rack-test"
+  spec.add_development_dependency "builder"
 
   spec.add_dependency "sinatra"
   spec.add_dependency "nori", ">= 2.0.0"
   spec.add_dependency "nokogiri"
-  spec.add_dependency "builder"
 end

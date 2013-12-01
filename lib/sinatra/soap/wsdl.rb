@@ -1,34 +1,40 @@
-require 'singleton'
-
 module Sinatra
   module Soap
     class Wsdl
-      include Singleton
 
-      attr_accessor :actions, :namespace
+      # class << self
+      #   attr_accessor :actions
+      # end
+      @@actions = {}
 
-      def initialize
-        @actions = {}
-      end
-
-      def generate
-        # raise "Not implemented"
-      end
-
-      def [](key)
-        actions[key]
-      end
-
-      def register_action(name, *args, &block)
-        actions[name] = {}
+      def self.register(name, *args, &block)
+        @@actions = {} if @@actions.nil?
+        @@actions[name] = {}
         args = args.pop
         unless args.nil?
           args.each do |key, value|
-            actions[name][key] = value
+            @@actions[name][key] = value
           end
         end
-        actions[name][:block] = block if block_given?
+        @@actions[name][:block] = block if block_given?
       end
+
+      def self.generate
+      end
+
+      attr_accessor :action, :block, :arguments
+
+      def initialize(action)
+        data = all[action]
+        @action = action
+        @block = data[:block]
+        @arguments = data.select {|k,v| k != :block}
+      end
+
+      def all
+        @@actions
+      end
+
     end
   end
 end

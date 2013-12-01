@@ -2,23 +2,32 @@ require "nori"
 
 module Sinatra
   module Soap
-    module Helpers
+    class Request
 
-      def call_action_block
+      attr_reader :wsdl, :action, :env, :request, :params
+
+      def initialize(env, request, params)
+        @env = env
+        @request = request
+        @params = params
         parse_request
-        wsdl[params[:action]][:block].call(params[:soap][params[:action]])
       end
 
-      def parse_request
-        action = soap_action
-        soap_params
-        raise Soap::SoapFault, "Undefined Soap Action" unless wsdl.actions.include?(action)
+
+      def call_block
+        request_block = wsdl.block
+        response_hash = self.instance_eval(&request_block)
+        Soap::Response.new(wsdl, response_hash)
+      rescue Soap::Error => e
+        Soap::Response.new.build_error(e)
       end
 
-      def soap_action
+
+      def action
         return params[:action] unless params[:action].nil?
         params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
       end
+
 
       def soap_params 
         return params[:soap] unless params[:soap].nil?
@@ -27,9 +36,14 @@ module Sinatra
         params[:soap] = nori.parse(rack_input)[:Envelope][:Body]
       end
 
-      def wsdl
-        Soap::Wsdl.instance
+
+      private
+
+      def parse_request
+        action
+        soap_params
       end
+
 
       def nori(snakecase=false)
         Nori.new(
@@ -41,6 +55,12 @@ module Sinatra
           )
         )
       end
+
+
+      def wsdl
+        @wsdl = Soap::Wsdl.new(action)
+      end
+
     end
   end
 end

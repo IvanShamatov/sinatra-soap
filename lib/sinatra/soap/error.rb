@@ -1,5 +1,5 @@
 module Sinatra
   module Soap
-    class SoapFault < StandardError; end
+    class Error < StandardError; end
   end
 end
