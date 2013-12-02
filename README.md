@@ -43,9 +43,17 @@ end
 ## Settings
 
 **:wsdl_route** — url for getting wsdl, either static or dynamically generated file
+```ruby
+set :wsdl_route, '/wsdl'
+```
+Defines route for app to response with wsdl. Default is '/wsdl'
 
 
 **:endpoint** — url for sending SOAP Requests
+```ruby
+set :endpoint, '/action'
+```
+Defines route for SOAP Requests. Default is '/action'
 
 
 **:wsdl_file** — app will send static file, if this setting specified
@@ -56,10 +64,17 @@ If wsdl_file is set, app will try to read wsdl file from ```:public_folder``` (b
 
 
 **:namespace** — wsdl setting, required for generating wsdl
-namespace is taking its place in ```xmlns:tns``` and ```targetNamespace``` definitions of SOAP Envelope
+```ruby
+set :namespace, "http://schemas.xmlsoap.org/wsdl/"
+```
+Namespace is taking it's place in ```xmlns:tns``` and ```targetNamespace``` definitions of SOAP Envelope
+
 
 **:service** — wsdl setting, required for generating wsdl
-
+```ruby
+set :service, "sinatra"
+```
+Service involved in ```portType```, ```binding``` and ```service``` definitions as a prefix for name attribute.
 
 
 

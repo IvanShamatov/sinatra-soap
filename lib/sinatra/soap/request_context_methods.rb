@@ -11,7 +11,16 @@ module Sinatra
       end
 
       def get_wsdl
-        builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}
+        if defined?(settings.wsdl_path)
+          path = File.join(settings.public_folder, settings.wsdl_path)
+          if File.exist?(path)
+            File.read(path)
+          else
+            raise "No wsdl file"
+          end
+        else
+          builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}
+        end
       end
 
     end
