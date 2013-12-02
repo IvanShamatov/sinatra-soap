@@ -17,15 +17,17 @@ module Sinatra
     def self.registered(app)
       app.helpers Soap::RequestContextMethods
 
-      app.set :soap_path, '/action' unless defined?(app.settings.soap_path)
-      app.set :wsdl_path, '/wsdl' unless defined?(app.settings.wsdl_path)
+      app.set :wsdl_route, '/wsdl' unless defined?(app.settings.wsdl_path)
+      app.set :namespace, 'Any' unless defined?(app.settings.namespace)
+      app.set :endpoint, '/action' unless defined?(app.settings.endpoint)
+      app.set :service, 'Sinatra' unless defined?(app.settings.service)
 
-      app.post(app.settings.soap_path) do
+      app.post(app.settings.endpoint) do
         content_type 'text/xml'
         call_action_block
       end
 
-      app.get(app.settings.wsdl_path) do 
+      app.get(app.settings.wsdl_route) do 
         get_wsdl
       end
     end

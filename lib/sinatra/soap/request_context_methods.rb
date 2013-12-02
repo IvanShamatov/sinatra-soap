@@ -11,7 +11,7 @@ module Sinatra
       end
 
       def get_wsdl
-        Soap::Wsdl.generate
+        builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}
       end
 
     end
