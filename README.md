@@ -7,12 +7,7 @@ Sinatra-soap gem makes task to create SOAP API really simple. Inspired by WashOu
 
 ## Overview
 
-In case of simplicity and quick first working release:
- 
- - WSDL would not be generated
- - WSDL would not be checked
- - Response would be ```"#{soap_action}Response"``` and types would guessed.
-
+In case of simplicity and quick first working release: 
 
 ## Usage
 
@@ -22,7 +17,7 @@ A classic application would work like that:
 require 'sinatra'
 require 'sinatra/soap'
 
-soap "SomeAction" do |params|
+soap "SomeAction"
   do_something_with_params # hash to be returned
 end
 ```
@@ -38,7 +33,7 @@ class SoapAPI < Sinatra::Base
   #remember to register extenstion if you are using modular style
   register Sinatra::Soap 
 
-  soap "SomeAction" do |params|
+  soap "SomeAction"
     params # hash to be returned
   end
 end

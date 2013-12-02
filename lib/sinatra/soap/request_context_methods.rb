@@ -4,8 +4,10 @@ module Sinatra
 
       def call_action_block
         request = Soap::Request.new(env, request, params)
-        response = request.call_block
-        response.build
+        response = request.execute
+        builder :response, locals: {wsdl: response.wsdl, params: response.params}
+      rescue Soap::Error => e
+        builder :error, locals: {e: e}
       end
 
       def get_wsdl

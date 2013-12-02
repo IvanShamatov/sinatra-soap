@@ -4,7 +4,7 @@ require 'sinatra/soap'
 class App < Sinatra::Base
   register Sinatra::Soap
   soap :test do
-    puts params.inspect
+    params
   end
 end
-puts App.run!
+App.run!

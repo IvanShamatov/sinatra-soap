@@ -14,36 +14,38 @@ module Sinatra
       end
 
 
-      def call_block
+      def execute
         request_block = wsdl.block
         response_hash = self.instance_eval(&request_block)
         Soap::Response.new(wsdl, response_hash)
-      rescue Soap::Error => e
-        Soap::Response.new.build_error(e)
       end
 
+      alias_method :orig_params, :params
 
       def action
-        return params[:action] unless params[:action].nil?
-        params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
+        return orig_params[:action] unless orig_params[:action].nil?
+        orig_params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
       end
 
 
-      def soap_params 
-        return params[:soap] unless params[:soap].nil?
+      def params 
+        return orig_params[:soap] unless orig_params[:soap].nil?
         rack_input = env["rack.input"].read
         env["rack.input"].rewind
-        params[:soap] = nori.parse(rack_input)[:Envelope][:Body]
+        orig_params[:soap] = nori.parse(rack_input)[:Envelope][:Body][action]
       end
 
+
+      def wsdl
+        @wsdl = Soap::Wsdl.new(action)
+      end
 
       private
 
       def parse_request
         action
-        soap_params
+        params
       end
-
 
       def nori(snakecase=false)
         Nori.new(
@@ -54,11 +56,6 @@ module Sinatra
                       : lambda { |tag| tag.to_sym }
           )
         )
-      end
-
-
-      def wsdl
-        @wsdl = Soap::Wsdl.new(action)
       end
 
     end

@@ -26,6 +26,7 @@ module Sinatra
 
       def initialize(action)
         data = all[action]
+        raise Soap::Error, "Undefined Soap Action" if data.nil?
         @action = action
         @block = data[:block]
         @arguments = data.select {|k,v| k != :block}
