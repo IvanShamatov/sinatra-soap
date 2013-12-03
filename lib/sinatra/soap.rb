@@ -18,7 +18,7 @@ module Sinatra
       app.helpers Soap::RequestContextMethods
 
       app.set :wsdl_route, '/wsdl' unless defined?(app.settings.wsdl_path)
-      app.set :namespace, 'Any' unless defined?(app.settings.namespace)
+      app.set :namespace, 'http://schemas.xmlsoap.org/wsdl/' unless defined?(app.settings.namespace)
       app.set :endpoint, '/action' unless defined?(app.settings.endpoint)
       app.set :service, 'Sinatra' unless defined?(app.settings.service)
 
@@ -28,6 +28,7 @@ module Sinatra
       end
 
       app.get(app.settings.wsdl_route) do 
+        content_type 'text/xml'
         get_wsdl
       end
     end
