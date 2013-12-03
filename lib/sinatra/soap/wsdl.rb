@@ -2,10 +2,11 @@ module Sinatra
   module Soap
     class Wsdl
 
-      # class << self
-      #   attr_accessor :actions
-      # end
       @@actions = {}
+
+      def self.actions
+        @@actions
+      end
 
       def self.register(name, *args, &block)
         @@actions = {} if @@actions.nil?

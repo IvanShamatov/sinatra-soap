@@ -3,7 +3,7 @@ require "sinatra/soap/version"
 require "sinatra/soap/wsdl"
 require "sinatra/soap/error"
 require "sinatra/soap/dsl_methods"
-require "sinatra/soap/request_context_methods"
+require "sinatra/soap/helper_methods"
 require "sinatra/soap/request"
 require "sinatra/soap/response"
 require "builder"
@@ -15,7 +15,7 @@ module Sinatra
     include DslMethods
 
     def self.registered(app)
-      app.helpers Soap::RequestContextMethods
+      app.helpers Soap::HelperMethods
 
       app.set :wsdl_route, '/wsdl' unless defined?(app.settings.wsdl_path)
       app.set :namespace, 'http://schemas.xmlsoap.org/wsdl/' unless defined?(app.settings.namespace)

@@ -8,6 +8,13 @@ class SoapApp < Sinatra::Base
   soap :test do
     params
   end
+
+  soap :add_circle, in: {circle: {center: {x: :integer, y: :integer}, 
+                                  radius: :double}},
+            				out: nil do
+  	params #=> {circle: {center: {x: 3, y: 2}, radius: 12.0} }
+  	nil
+	end
 end
 
 module RSpecMixin

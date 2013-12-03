@@ -1,6 +1,6 @@
 module Sinatra
   module Soap
-    module RequestContextMethods
+    module HelperMethods
 
       def call_action_block
         request = Soap::Request.new(env, request, params)
