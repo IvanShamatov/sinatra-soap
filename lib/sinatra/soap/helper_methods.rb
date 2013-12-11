@@ -2,12 +2,17 @@ module Sinatra
   module Soap
     module HelperMethods
 
+      # Return the location where we can find our views
+      def soap_views()
+        File.join(File.dirname(__FILE__), "..", "views")
+      end
+
       def call_action_block
         request = Soap::Request.new(env, request, params)
         response = request.execute
-        builder :response, locals: {wsdl: response.wsdl, params: response.params}, :views => settings.sinatra_soap_views
+        builder :response, locals: {wsdl: response.wsdl, params: response.params}, :views => self.soap_views
       rescue Soap::Error => e
-        builder :error, locals: {e: e}, :views => settings.sinatra_soap_views
+        builder :error, locals: {e: e}, :views => self.soap_views
       end
 
       def get_wsdl
@@ -19,10 +24,9 @@ module Sinatra
             raise "No wsdl file"
           end
         else
-          builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}, :views => settings.sinatra_soap_views
+          builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}, :views => self.soap_views
         end
       end
-
     end
   end
 end
