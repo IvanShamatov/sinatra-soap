@@ -21,6 +21,7 @@ module Sinatra
       app.set :namespace, 'http://schemas.xmlsoap.org/wsdl/' unless defined?(app.settings.namespace)
       app.set :endpoint, '/action' unless defined?(app.settings.endpoint)
       app.set :service, 'Sinatra' unless defined?(app.settings.service)
+      app.set :sinatra_soap_views,  File.join(File.dirname(__FILE__),"views") unless defined?(app.settings.sinatra_soap_views)
 
       app.post(app.settings.endpoint) do
         content_type 'text/xml'

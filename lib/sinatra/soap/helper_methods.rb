@@ -5,9 +5,9 @@ module Sinatra
       def call_action_block
         request = Soap::Request.new(env, request, params)
         response = request.execute
-        builder :response, locals: {wsdl: response.wsdl, params: response.params}
+        builder :response, locals: {wsdl: response.wsdl, params: response.params}, :views => settings.sinatra_soap_views
       rescue Soap::Error => e
-        builder :error, locals: {e: e}
+        builder :error, locals: {e: e}, :views => settings.sinatra_soap_views
       end
 
       def get_wsdl
@@ -19,7 +19,7 @@ module Sinatra
             raise "No wsdl file"
           end
         else
-          builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}
+          builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}, :views => settings.sinatra_soap_views
         end
       end
 
