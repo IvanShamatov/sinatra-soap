@@ -13,15 +13,15 @@ describe "Request" do
   end
 
   it "should get soap_action" do 
-    @request.action.should == :test
+    expect(@request.action).to eq(:test)
   end
 
   it "should get soap arguments" do 
-    @request.params.should == {par: "one", par2: "bar", foo: "wat"}
+    expect(@request.params).to eq({par: "one", par2: "bar", foo: "wat"})
   end
 
   it "should build response" do 
-    @request.execute.should be_an_instance_of(Sinatra::Soap::Response)
+    expect(@request.execute).to be_an_instance_of(Sinatra::Soap::Response)
   end
 
   it "should validate input with WSDL" do 

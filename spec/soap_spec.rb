@@ -22,7 +22,7 @@ describe 'A default soap sinatra application' do
   </soap:Body>
 </soap:Envelope>
     XML
-    last_response.body.should == response
+    expect(last_response.body).to eq(response)
   end
 
 
@@ -41,17 +41,17 @@ describe 'A default soap sinatra application' do
   </soap:Body>
 </soap:Envelope>
     XML
-    last_response.body.should == response
+    expect(last_response.body).to eq(response)
   end
 
   it "should have endpoint for soap actions" do
     endpoint = app.routes["POST"].select {|k| k[0].to_s.match('action')}.count
-    endpoint.should eq 1
+    expect(endpoint).to eq 1
   end
 
   it "should have route for wsdl" do
     wsdl = app.routes["GET"].select {|k| k[0].to_s.match('wsdl')}.count
-    wsdl.should == 1
+    expect(wsdl).to eq(1)
   end
 
   it "should return a usable soap views directory" do
