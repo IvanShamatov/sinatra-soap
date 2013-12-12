@@ -5,7 +5,6 @@ describe 'A default soap sinatra application' do
   def app
     SoapApp 
   end
-  
 
   it "should parse soap request and send response" do
     headers = {"HTTP_SOAPACTION" => 'test'}
@@ -53,6 +52,11 @@ describe 'A default soap sinatra application' do
   it "should have route for wsdl" do
     wsdl = app.routes["GET"].select {|k| k[0].to_s.match('wsdl')}.count
     wsdl.should == 1
+  end
+
+  it "should return a usable soap views directory" do
+    view_search = File.join(app.views, "*.builder")
+    expect(Dir.glob(view_search).count).to be > 0
   end
 
 end

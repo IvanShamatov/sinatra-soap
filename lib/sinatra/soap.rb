@@ -32,7 +32,6 @@ module Sinatra
         get_wsdl
       end
     end
-
   end
   Delegator.delegate :soap
   register Soap
