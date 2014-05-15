@@ -22,11 +22,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rack-test"
-  spec.add_development_dependency "builder"
   spec.add_development_dependency "debugger"
 
 
-  spec.add_dependency "sinatra"
-  spec.add_dependency "nori", ">= 2.0.0"
-  spec.add_dependency "nokogiri"
+  spec.add_runtime_dependency "builder"
+  spec.add_runtime_dependency "sinatra"
+  spec.add_runtime_dependency "nori", ">= 2.0.0"
+  spec.add_runtime_dependency "nokogiri"
 end
