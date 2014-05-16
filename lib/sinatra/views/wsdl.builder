@@ -14,7 +14,10 @@ xml.definitions 'xmlns' => 'http://schemas.xmlsoap.org/wsdl/',
       wsdl.each do |operation, formats|
         formats[:in]||={}
         formats[:out]||={}
-        (formats[:in].merge!(formats[:out])).each do |p|
+        formats[:in].each do |p|
+          wsdl_type xml, p, defined
+        end
+        formats[:out].each do |p|
           wsdl_type xml, p, defined
         end
       end
@@ -56,6 +59,8 @@ xml.definitions 'xmlns' => 'http://schemas.xmlsoap.org/wsdl/',
   end
 
   wsdl.each do |operation, formats|
+    puts operation
+    puts formats
     xml.message :name => "#{operation}" do
       formats[:in] ||= []
       formats[:in].each do |p|

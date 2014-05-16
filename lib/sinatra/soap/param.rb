@@ -21,10 +21,10 @@ module Soap
       elsif type.is_a?(Class)
         @type         = 'struct'
         @source_class = type
-      #  @map          = self.class.parse_def(soap_config, type.wash_out_param_map)
+        @map          = type
       else
         @type = 'struct'
-      #  @map  = self.class.parse_def(soap_config, type)
+        @map  = type 
       end
     end
 

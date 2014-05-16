@@ -17,5 +17,10 @@ class App < Sinatra::Base
     params
   end
 
+  soap :ObjectTest, in: { TestObject: { a: :string, b: :string }}, out: { hello: :string } do
+    params
+  end
+
+
 end
 App.run!

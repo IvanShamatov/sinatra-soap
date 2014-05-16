@@ -49,8 +49,9 @@ module Sinatra
             xml.tag! "xsd:complexType", :name => param.basic_type do
               xml.tag! "xsd:sequence" do
                 param.map.each do |value|
-                  more << value if value.struct?
-                  xml.tag! "xsd:element", wsdl_occurence(value, false, :name => value.name, :type => value.namespaced_type)
+                  param_value = Param.new(value[0], value[1])
+                  more << value if param_value.struct?
+                  xml.tag! "xsd:element", wsdl_occurence(value, false)
                 end
               end
             end
