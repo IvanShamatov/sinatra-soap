@@ -59,8 +59,6 @@ xml.definitions 'xmlns' => 'http://schemas.xmlsoap.org/wsdl/',
   end
 
   wsdl.each do |operation, formats|
-    puts operation
-    puts formats
     xml.message :name => "#{operation}" do
       formats[:in] ||= []
       formats[:in].each do |p|

@@ -44,7 +44,6 @@ module Sinatra
         param = Param.new(param[0], param[1])
         more = []
         if param.struct?
-          puts "A struct"
           if !defined.include?(param.basic_type)
             xml.tag! "xsd:complexType", :name => param.basic_type do
               xml.tag! "xsd:sequence" do
