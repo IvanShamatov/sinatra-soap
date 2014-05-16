@@ -9,13 +9,10 @@ module Sinatra
       end
 
       def self.register(name, *args, &block)
-        @@actions = {} if @@actions.nil?
         @@actions[name] = {}
-        args = args.pop
-        unless args.nil?
-          args.each do |key, value|
-            @@actions[name][key] = value
-          end
+        args = args.pop || {}
+        args.each do |key, value|
+          @@actions[name][key] = value || {}
         end
         @@actions[name][:block] = block if block_given?
       end

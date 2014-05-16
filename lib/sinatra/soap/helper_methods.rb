@@ -1,3 +1,5 @@
+require_relative 'param'
+
 module Sinatra
   module Soap
     module HelperMethods
@@ -25,6 +27,40 @@ module Sinatra
           end
         else
           builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}, :views => self.soap_views
+        end
+      end
+
+      def wsdl_occurence(param, inject, extend_with = {})
+        param=Param.new(param[0], param[1])
+        extend_with = { :name => param.name, :type => param.namespaced_type }
+        data = !param.multiplied ? {} : {
+          "#{'xsi:' if inject}minOccurs" => 0,
+          "#{'xsi:' if inject}maxOccurs" => 'unbounded'
+        }
+        extend_with.merge(data)
+      end
+
+      def wsdl_type(xml, param, defined=[])
+        param = Param.new(param[0], param[1])
+        more = []
+        if param.struct?
+          puts "A struct"
+          if !defined.include?(param.basic_type)
+            xml.tag! "xsd:complexType", :name => param.basic_type do
+              xml.tag! "xsd:sequence" do
+                param.map.each do |value|
+                  more << value if value.struct?
+                  xml.tag! "xsd:element", wsdl_occurence(value, false, :name => value.name, :type => value.namespaced_type)
+                end
+              end
+            end
+            defined << param.basic_type
+          elsif !param.classified?
+            raise RuntimeError, "Duplicate use of `#{param.basic_type}` type name. Consider using classified types."
+          end
+        end
+        more.each do |p|
+          wsdl_type xml, p, defined
         end
       end
     end

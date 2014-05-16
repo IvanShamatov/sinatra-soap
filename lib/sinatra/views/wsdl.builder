@@ -12,7 +12,9 @@ xml.definitions 'xmlns' => 'http://schemas.xmlsoap.org/wsdl/',
     xml.tag! "schema", :targetNamespace => settings.namespace, :xmlns => 'http://www.w3.org/2001/XMLSchema' do
       defined = []
       wsdl.each do |operation, formats|
-        (formats[:in] + formats[:out]).each do |p|
+        formats[:in]||={}
+        formats[:out]||={}
+        (formats[:in].merge!(formats[:out])).each do |p|
           wsdl_type xml, p, defined
         end
       end
@@ -49,19 +51,23 @@ xml.definitions 'xmlns' => 'http://schemas.xmlsoap.org/wsdl/',
 
   xml.service :name => "service" do
     xml.port :name => "#{settings.service}_port", :binding => "tns:#{settings.service}_binding" do
-      xml.tag! "soap:address", :location => send("#{settings.service}_action_url")
+      xml.tag! "soap:address", :location => "http://#{request.host_with_port}#{settings.endpoint}"
     end
   end
 
   wsdl.each do |operation, formats|
     xml.message :name => "#{operation}" do
+      formats[:in] ||= []
       formats[:in].each do |p|
-        xml.part wsdl_occurence(p, false, :name => p.name, :type => p.namespaced_type)
+        xml.part wsdl_occurence(p, false)
+#, :name => param.name, :type => param.namespaced_type)
       end
     end
-    xml.message :name => "#{operation}Response}" do
+    xml.message :name => "#{operation}Response" do
+      formats[:out] ||= []
       formats[:out].each do |p|
-        xml.part wsdl_occurence(p, false, :name => p.name, :type => p.namespaced_type)
+        xml.part wsdl_occurence(p, false)
+#, :name => param.name, :type => param.namespaced_type)
       end
     end
   end
