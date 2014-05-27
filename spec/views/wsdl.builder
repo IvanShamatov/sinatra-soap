@@ -12,7 +12,12 @@ xml.definitions 'xmlns' => 'http://schemas.xmlsoap.org/wsdl/',
     xml.tag! "schema", :targetNamespace => settings.namespace, :xmlns => 'http://www.w3.org/2001/XMLSchema' do
       defined = []
       wsdl.each do |operation, formats|
-        (formats[:in] + formats[:out]).each do |p|
+        formats[:in]||={}
+        formats[:out]||={}
+        formats[:in].each do |p|
+          wsdl_type xml, p, defined
+        end
+        formats[:out].each do |p|
           wsdl_type xml, p, defined
         end
       end
