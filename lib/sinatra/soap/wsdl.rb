@@ -9,12 +9,15 @@ module Sinatra
       end
 
       def self.register(name, *args, &block)
-        @@actions[name] = {}
         args = args.pop || {}
+        namespace = args.fetch(:namespace, '')
+        action = namespace + name.to_s
+
+        @@actions[action] = {}
         args.each do |key, value|
-          @@actions[name][key] = value || {}
+          @@actions[action][key] = value || {}
         end
-        @@actions[name][:block] = block if block_given?
+        @@actions[action][:block] = block if block_given?
       end
 
       def self.generate

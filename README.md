@@ -111,4 +111,17 @@ The code above will respond to request like this:
 </env:Envelope>
 ``` 
 
+You can also set a namespace for a specific SOAP Action:
+```ruby
+soap :test, in: {circle: {center: {x: :integer, 
+                                   y: :integer}, 
+                          radius: :double}
+                },
+            out: nil 
+            namespace: 'http://example.com/namespace' do
+  params #=> {circle: {center: {x: 3, y: 2}, radius: 12.0} }
+  nil
+end
+```
+
 

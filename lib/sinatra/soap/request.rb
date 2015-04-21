@@ -24,7 +24,7 @@ module Sinatra
 
       def action
         return orig_params[:action] unless orig_params[:action].nil?
-        orig_params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
+        orig_params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1')
       end
 
 
