@@ -9,6 +9,27 @@ module Sinatra
         File.join(File.dirname(__FILE__), "..", "views")
       end
 
+      def hash_to_xml(xml, hash)
+        hash.each do |key, value|
+          if value.is_a?(Hash)
+            attrs = {}
+            content = {}
+            value.each do |key, value|
+              if key.to_s.start_with?("@")
+                attrs[key.to_s[1..-1]] = value
+              else
+                content[key] = value
+              end
+            end
+            xml.tag!(key, attrs) do
+              hash_to_xml(xml, content)
+            end
+          else
+            xml.tag! key, value
+          end
+        end
+      end
+
       def call_action_block
         request = Soap::Request.new(env, request, params)
         if defined?(logger) && logger

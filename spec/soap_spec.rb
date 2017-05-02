@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe 'A default soap sinatra application' do
   def app
-    SoapApp 
+    SoapApp
   end
 
   it "should parse soap request and send response" do
