@@ -6,10 +6,13 @@ module Sinatra
 
       attr_reader :wsdl, :action, :env, :request, :params, :response
 
+      alias_method :body, :params
+
       def initialize(env, request, params)
         @env = env
         @request = request
         @params = params
+        @header = {}
         parse_request
       end
 
@@ -37,14 +40,19 @@ module Sinatra
         orig_params[:action] = env['HTTP_SOAPACTION'].to_s.gsub(/^"(.*)"$/, '\1').to_sym
       end
 
-
-      def params 
+      def params
         return orig_params[:soap] unless orig_params[:soap].nil?
         rack_input = env["rack.input"].read
         env["rack.input"].rewind
         orig_params[:soap] = nori.parse(rack_input)[:Envelope][:Body][action]
       end
 
+      def header
+        return orig_params[:soap_header] unless orig_params[:soap_header].nil?
+        rack_input = env["rack.input"].read
+        env["rack.input"].rewind
+        orig_params[:soap_header] = nori.parse(rack_input)[:Envelope][:Header]
+      end
 
       def wsdl
         @wsdl = Soap::Wsdl.new(action)
