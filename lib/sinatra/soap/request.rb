@@ -4,7 +4,7 @@ module Sinatra
   module Soap
     class Request
 
-      attr_reader :wsdl, :action, :env, :request, :params
+      attr_reader :wsdl, :action, :env, :request, :params, :response
 
       def initialize(env, request, params)
         @env = env
@@ -16,8 +16,18 @@ module Sinatra
 
       def execute
         request_block = wsdl.block
+        @response = Soap::Response.new(wsdl, nil)
         response_hash = self.instance_eval(&request_block)
-        Soap::Response.new(wsdl, response_hash)
+
+        if @response.params == nil
+          if response_hash.is_a?(Array)
+            @response.params, @response.headers = response_hash
+          else
+            @response.params = response_hash
+          end
+        end
+
+        @response
       end
 
       alias_method :orig_params, :params
