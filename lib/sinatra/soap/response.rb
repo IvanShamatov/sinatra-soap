@@ -5,6 +5,9 @@ module Sinatra
       attr_reader :wsdl
       attr_accessor :params, :headers
 
+      alias_method :body, :params
+      alias_method :body=, :params=
+
       def initialize(wsdl, params, headers = nil)
         @wsdl = wsdl
         @params = params

@@ -31,6 +31,13 @@ module Sinatra
                 hash_to_xml(xml, content)
               end
             end
+          elsif value.is_a?(Array)
+            # TODO: proper rendering. if we have array of hashes then each hash should be a tag with singulular name of parent key
+            xml.tag!(key) do
+              value.each do |value|
+                hash_to_xml(xml, value)
+              end
+            end
           else
             xml.tag! key, value
           end
@@ -49,6 +56,9 @@ module Sinatra
           soap_headers: response.headers
         }
       rescue Soap::Error => e
+        if defined?(logger) && logger
+          logger.info "SOAP Request: #{env['HTTP_SOAPACTION']} - Undefined Soap Action"
+        end
         builder :error, locals: {e: e}, views: self.soap_views
       end
 
