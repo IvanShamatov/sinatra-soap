@@ -5,3 +5,4 @@
 .rvmrc
 *.swp*.gem
 Gemfile.lock
+.ruby-version
