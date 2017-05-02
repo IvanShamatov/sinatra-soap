@@ -14,15 +14,22 @@ module Sinatra
           if value.is_a?(Hash)
             attrs = {}
             content = {}
+            content_str = nil
             value.each do |key, value|
-              if key.to_s.start_with?("@")
+              if key.to_s == "@@content"
+                content_str = value
+              elsif key.to_s.start_with?("@")
                 attrs[key.to_s[1..-1]] = value
               else
                 content[key] = value
               end
             end
-            xml.tag!(key, attrs) do
-              hash_to_xml(xml, content)
+            if content_str
+              xml.tag!(key, attrs, content_str)
+            else
+              xml.tag!(key, attrs) do
+                hash_to_xml(xml, content)
+              end
             end
           else
             xml.tag! key, value

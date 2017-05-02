@@ -27,6 +27,18 @@ class SoapApp < Sinatra::Base
       }
     }
   end
+
+  soap :test_render2 do
+    {
+      result: {
+        "@status": "success",
+        foo: {
+          "@active": true,
+          "@@content": "bar"
+        }
+      }
+    }
+  end
 end
 
 module RSpecMixin
