@@ -54,6 +54,8 @@ module Sinatra
         orig_params[:soap_header] = nori.parse(rack_input)[:Envelope][:Header]
       end
 
+      alias_method :soap_header, :header
+
       def wsdl
         @wsdl = Soap::Wsdl.new(action)
       end
