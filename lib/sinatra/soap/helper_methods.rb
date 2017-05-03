@@ -32,15 +32,31 @@ module Sinatra
               end
             end
           elsif value.is_a?(Array)
-            # TODO: proper rendering. if we have array of hashes then each hash should be a tag with singulular name of parent key
-            xml.tag!(key) do
+            parent_tag = singularize(key)
+
+            if parent_tag == key.to_s
               value.each do |value|
-                hash_to_xml(xml, value)
+                hash_to_xml(xml, parent_tag => value)
+              end
+            else
+              xml.tag!(key) do
+                value.each do |value|
+                  hash_to_xml(xml, parent_tag => value)
+                end
               end
             end
           else
             xml.tag! key, value
           end
+        end
+      end
+
+      def singularize(word)
+        word = word.to_s
+        if word.respond_to?(:singularize)
+          word.singularize
+        else
+          word.sub(/(c|s|x)es$/, '\1').sub(/s$/, '')
         end
       end
 
