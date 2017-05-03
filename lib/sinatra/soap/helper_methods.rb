@@ -51,12 +51,17 @@ module Sinatra
         end
       end
 
+      # Try to use activesupport's singularize, failback to simplified implementation
       def singularize(word)
         word = word.to_s
         if word.respond_to?(:singularize)
           word.singularize
         else
-          word.sub(/(c|s|x)es$/, '\1').sub(/s$/, '')
+          if word =~ /(c|s|x)es$/
+            word.sub(/(c|s|x)es$/, '\1')
+          else
+            word.sub(/s$/, '')
+          end
         end
       end
 
