@@ -78,15 +78,12 @@ module Sinatra
         }
       rescue Soap::Error => e
         if defined?(logger) && logger
-          logger.info "SOAP Request: #{env['HTTP_SOAPACTION']} - Undefined Soap Action"
+          logger.error "SOAP Error: #{e.message} - Action: #{env['HTTP_SOAPACTION']}"
         end
         builder :error, locals: {e: e}, views: self.soap_views
       end
 
       def get_wsdl
-        if defined?(logger) && logger
-          logger.info "SOAP: wsdl request"
-        end
         if defined?(settings.wsdl_path)
           path = File.join(settings.public_folder, settings.wsdl_path)
           if File.exist?(path)
