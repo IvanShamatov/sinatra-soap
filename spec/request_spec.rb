@@ -12,7 +12,7 @@ describe "Request" do
                 'xmlns:wsdl="any" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">' +
               '<env:Body><wsdl:test><par>one</par><par2>bar</par2><foo>wat</foo></wsdl:test></env:Body></env:Envelope>'
     post '/action', message, headers
-    @request = Sinatra::Soap::Request.new(last_request.env, last_request, last_request.params)
+    @request = Sinatra::Soap::Request.new(last_request.env, last_request, last_request.params, nil)
   end
 
   it "should get soap_action" do

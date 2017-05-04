@@ -10,6 +10,9 @@ module Sinatra
       end
 
       def hash_to_xml(xml, hash)
+        unless hash.is_a?(Hash)
+          raise ArgumentError, "content must be a hash"
+        end
         hash.each do |key, value|
           if value.is_a?(Hash)
             attrs = {}
@@ -66,7 +69,7 @@ module Sinatra
       end
 
       def call_action_block
-        request = Soap::Request.new(env, request, params)
+        request = Soap::Request.new(env, request, params, self)
         if defined?(logger) && logger
           logger.info "SOAP Request: #{request.action}"
         end

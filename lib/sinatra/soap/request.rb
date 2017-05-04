@@ -8,11 +8,12 @@ module Sinatra
 
       alias_method :body, :params
 
-      def initialize(env, request, params)
+      def initialize(env, request, params, app)
         @env = env
         @request = request
         @params = params
         @header = {}
+        @app = app
         parse_request
       end
 
@@ -58,6 +59,10 @@ module Sinatra
 
       def wsdl
         @wsdl = Soap::Wsdl.new(action)
+      end
+
+      def method_missing(method_name, *args, &blok)
+        @app.send(method_name, *args, &blok)
       end
 
       private
