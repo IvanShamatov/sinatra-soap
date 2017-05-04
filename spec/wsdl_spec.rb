@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe "WSDL" do
 
-  def wsdl 
+  def wsdl
     Sinatra::Soap::Wsdl
   end
 
@@ -11,7 +11,7 @@ describe "WSDL" do
     [:test, :add_circle].each do |action|
       expect(wsdl.actions).to include(action)
     end
-  end 
+  end
 
   it "should hold blocks for registered actions" do
     [:test, :add_circle].each do |action|

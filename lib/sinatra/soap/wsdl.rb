@@ -20,13 +20,14 @@ module Sinatra
       def self.generate
       end
 
-      attr_accessor :action, :block, :arguments
+      attr_accessor :action, :block, :arguments, :reply_name
 
       def initialize(action)
         data = all[action]
         raise Soap::Error, "Undefined Soap Action" if data.nil?
         @action = action
         @block = data[:block]
+        @reply_name = data[:reply_name]
         @arguments = data.select {|k,v| k != :block}
       end
 

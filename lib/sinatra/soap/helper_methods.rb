@@ -9,12 +9,81 @@ module Sinatra
         File.join(File.dirname(__FILE__), "..", "views")
       end
 
+      def hash_to_xml(xml, hash)
+        unless hash.is_a?(Hash)
+          raise ArgumentError, "content must be a hash"
+        end
+        hash.each do |key, value|
+          if value.is_a?(Hash)
+            attrs = {}
+            content = {}
+            content_str = nil
+            value.each do |key, value|
+              if key.to_s == "@@content"
+                content_str = value
+              elsif key.to_s.start_with?("@")
+                attrs[key.to_s[1..-1]] = value
+              else
+                content[key] = value
+              end
+            end
+            if content_str
+              xml.tag!(key, attrs, content_str)
+            else
+              xml.tag!(key, attrs) do
+                hash_to_xml(xml, content)
+              end
+            end
+          elsif value.is_a?(Array)
+            parent_tag = singularize(key)
+
+            if parent_tag == key.to_s
+              value.each do |value|
+                hash_to_xml(xml, parent_tag => value)
+              end
+            else
+              xml.tag!(key) do
+                value.each do |value|
+                  hash_to_xml(xml, parent_tag => value)
+                end
+              end
+            end
+          else
+            xml.tag! key, value
+          end
+        end
+      end
+
+      # Try to use activesupport's singularize, failback to simplified implementation
+      def singularize(word)
+        word = word.to_s
+        if word.respond_to?(:singularize)
+          word.singularize
+        else
+          if word =~ /(c|s|x)es$/
+            word.sub(/(c|s|x)es$/, '\1')
+          else
+            word.sub(/s$/, '')
+          end
+        end
+      end
+
       def call_action_block
-        request = Soap::Request.new(env, request, params)
+        request = Soap::Request.new(env, request, params, self)
+        if defined?(logger) && logger
+          logger.info "SOAP Request: #{request.action}"
+        end
         response = request.execute
-        builder :response, locals: {wsdl: response.wsdl, params: response.params}, :views => self.soap_views
+        builder :response, views: self.soap_views, locals: {
+          wsdl: response.wsdl,
+          params: response.params,
+          soap_headers: response.headers
+        }
       rescue Soap::Error => e
-        builder :error, locals: {e: e}, :views => self.soap_views
+        if defined?(logger) && logger
+          logger.error "SOAP Error: #{e.message} - Action: #{env['HTTP_SOAPACTION']}"
+        end
+        builder :error, locals: {e: e}, views: self.soap_views
       end
 
       def get_wsdl
@@ -26,7 +95,7 @@ module Sinatra
             raise "No wsdl file"
           end
         else
-          builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}, :views => self.soap_views
+          builder :wsdl, locals: {wsdl: Soap::Wsdl.actions}, views: self.soap_views
         end
       end
 
